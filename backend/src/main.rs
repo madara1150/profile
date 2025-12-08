@@ -1,24 +1,33 @@
-mod models;
+use actix_cors::Cors;
+use actix_web::{http, web, App, HttpServer};
 
-use models::Project;
+mod auth;
+mod handlers;
+mod models; // Keeping existing module if needed, though unused in auth
 
-fn main() {
-    let featured_projects = vec![
-        Project::new(
-            "E-Commerce Platform",
-            "https://images.unsplash.com/photo-1557821552-17105176677c?w=600&q=80",
-            Some(520),
-            Some(520),
-            Some("React & Node.js"),
-        ),
-        Project::new(
-            "Task Management App",
-            "https://images.unsplash.com/photo-1540350394557-8d14678e7f91?w=600&q=80",
-            Some(101),
-            Some(101),
-            Some("TypeScript System"),
-        ),
-    ];
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    unsafe {
+        std::env::set_var("RUST_LOG", "debug");
+    }
+    env_logger::init();
 
-    println!("{:#?}", featured_projects);
+    println!("Starting server at http://127.0.0.1:8080");
+
+    HttpServer::new(|| {
+        let cors = Cors::default()
+            .allow_any_origin() // For development simplicity
+            .allowed_methods(vec!["GET", "POST"])
+            .allowed_headers(vec![http::header::AUTHORIZATION, http::header::ACCEPT])
+            .allowed_header(http::header::CONTENT_TYPE)
+            .max_age(3600);
+
+        App::new()
+            .wrap(cors)
+            .route("/login", web::post().to(handlers::login))
+            .route("/protected", web::get().to(handlers::protected))
+    })
+    .bind(("127.0.0.1", 8080))?
+    .run()
+    .await
 }
