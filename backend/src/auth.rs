@@ -1,6 +1,9 @@
-use jsonwebtoken::{encode, decode, Header, Validation, EncodingKey, DecodingKey, TokenData, errors::Result as JwtResult};
+use chrono::{Duration, Utc};
+use jsonwebtoken::{
+    decode, encode, errors::Result as JwtResult, DecodingKey, EncodingKey, Header, TokenData,
+    Validation,
+};
 use serde::{Deserialize, Serialize};
-use chrono::{Utc, Duration};
 
 const SECRET_KEY: &[u8] = b"secret"; // In production, use environment variable
 
