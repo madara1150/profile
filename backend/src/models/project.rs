@@ -8,6 +8,7 @@ pub struct Project {
     pub label: Option<String>,
 }
 
+#[allow(dead_code)]
 impl Project {
     pub fn new(
         title: &str,

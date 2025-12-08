@@ -1,6 +1,6 @@
+use crate::auth;
 use actix_web::{web, HttpResponse, Responder};
 use serde::Deserialize;
-use crate::auth;
 
 #[derive(Deserialize)]
 pub struct LoginRequest {
@@ -24,11 +24,11 @@ pub async fn protected(req: actix_web::HttpRequest) -> impl Responder {
     // Ideally use an Extractor or Middleware
     if let Some(auth_header) = req.headers().get("Authorization") {
         if let Ok(auth_str) = auth_header.to_str() {
-            if auth_str.starts_with("Bearer ") {
-                let token = &auth_str[7..];
+            if let Some(token) = auth_str.strip_prefix("Bearer ") {
                 match auth::validate_token(token) {
                     Ok(token_data) => {
-                        return HttpResponse::Ok().body(format!("Welcome user: {}", token_data.claims.sub));
+                        return HttpResponse::Ok()
+                            .body(format!("Welcome user: {}", token_data.claims.sub));
                     }
                     Err(_) => return HttpResponse::Unauthorized().body("Invalid Token"),
                 }
