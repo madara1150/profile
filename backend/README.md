@@ -115,3 +115,24 @@ docker build -t uchiha-app .
 docker run -p 3000:3000 -p 8080:8080 -v $(pwd)/project.db:/app/backend/project.db --name uchiha-instance uchiha-app
 ```
 > **หมายเหตุ:** แนะนำให้ mount volume ไฟล์รูปภาพและไฟล์ Database เช่น `project.db` ออกมาด้านนอก เพื่อไม่ให้ข้อมูลหายตอนลบ Container ครับ
+
+---
+
+## ⚙️ CI/CD Automation ผ่าน Jenkins
+
+หากมีการอัปเดตโค้ดใน Branch `main` บน GitHub ก็สามารถตั้งค่าให้ **Jenkins** ดึงโค้ดมารันสร้างเซิร์ฟเวอร์ใหม่ได้อัตโนมัติ โดยใช้ไฟล์ `Jenkinsfile` ที่แถมมาให้ในโปรเจกต์นี้!
+
+### ขั้นตอนการตั้งค่าใน Jenkins:
+1. ไปที่ Jenkins Dashboard > สร้าง **New Item** เลือกเป็น **Pipeline**
+2. ในส่วนของ **Build Triggers** ให้ติ๊กเลือก `GitHub hook trigger for GITScm polling`
+3. เลื่อนลงมาที่ส่วน **Pipeline** 
+   - เปลี่ยน Definition เป็น `Pipeline script from SCM`
+   - เลือก SCM เป็น `Git` ใส่ Repository URL ของโปรเจกต์นี้
+   -ระบุ Branch Specifier เป็น `*/main`
+   - ช่อง Script Path ใส่ `Jenkinsfile`
+4. ตั้งค่า **Webhook** ใน GitHub โดยไปที่ Repository > **Settings > Webhooks**
+   - Payload URL: `http://<IP-Jenkins>:8080/github-webhook/`
+   - Content type: `application/json`
+   - เลือก trigger ตอน `Just the push event`
+
+เพียงเท่านี้เมื่อมีคน *Push/Merge โค้ดเข้าสู่ Branch main* ตัว Jenkins ก็จะรับคำสั่งและดึงโค้ดไปรัน Build Docker และสลับเซิร์ฟเวอร์ใหม่ให้อัตโนมัติทันที 🚀
