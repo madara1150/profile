@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown, Flame, Loader2 } from "lucide-react";
 import { Sharingan } from "@/components/ui/sharingan";
 import { ProjectCard } from "@/components/project-card";
+import { AkatsukiCloud } from "@/components/ui/akatsuki-cloud";
 
 interface ProjectFile {
   name: string;
@@ -158,7 +159,7 @@ export default function Home() {
                 <ProjectCard
                   key={project.id}
                   id={project.id}
-                  icon={project.images && project.images.length > 0 ? project.images[0] : "/icons/default.svg"}
+                  icon={project.images && project.images.length > 0 ? project.images[0] : <AkatsukiCloud className="w-16 h-16" />}
                   title={project.title}
                   desc={project.desc}
                   tags={project.tags || []}

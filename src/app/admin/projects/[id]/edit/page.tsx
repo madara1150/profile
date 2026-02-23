@@ -135,10 +135,12 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
         setError(null);
 
         try {
+            const token = localStorage.getItem("token");
             const res = await fetch(`http://localhost:8080/api/projects/${id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify(form),
             });
