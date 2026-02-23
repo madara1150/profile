@@ -79,6 +79,29 @@ pnpm dev
 ### 4. Enter the Illusion
 Open [http://localhost:3000](http://localhost:3000) in your browser to witness the portfolio.
 
+### 5. Running with Docker (Optional)
+If you want to run the full stack (Next.js + Go Backend) via Docker locally, build the image first:
+```bash
+docker build -t uchiha-app:latest .
+```
+
+Then run the container. **Note on Volume Mounting**: Since the project uses SQLite, you need to mount the database file. The path syntax depends on your terminal:
+
+**On Windows PowerShell:**
+```powershell
+docker run -p 3000:3000 -p 8080:8080 -v "${PWD}/backend/project.db:/app/backend/project.db" --name uchiha-instance uchiha-app:latest
+```
+
+**On Windows Command Prompt (CMD):**
+```cmd
+docker run -p 3000:3000 -p 8080:8080 -v "%cd%/backend/project.db:/app/backend/project.db" --name uchiha-instance uchiha-app:latest
+```
+
+**On Linux/Mac (Bash):**
+```bash
+docker run -p 3000:3000 -p 8080:8080 -v "$(pwd)/backend/project.db:/app/backend/project.db" --name uchiha-instance uchiha-app:latest
+```
+
 ---
 
 ## 📁 Repository Structure

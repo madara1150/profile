@@ -52,7 +52,7 @@ pipeline {
                         docker run -d \\
                             -p ${PORT_FRONTEND}:3000 \\
                             -p ${PORT_BACKEND}:8080 \\
-                            -v \$(pwd)/project.db:/app/backend/project.db \\
+                            -v "${env.WORKSPACE}/project.db:/app/backend/project.db" \\
                             --name ${CONTAINER_NAME} \\
                             ${IMAGE_NAME}:latest
                     """

@@ -1,12 +1,14 @@
 # ==========================================
 # Build Stage 1: Next.js Frontend
 # ==========================================
-FROM node:18-alpine AS frontend-builder
+FROM node:22-alpine AS frontend-builder
+# Next.js SWC compiler requires libc6-compat for alpine
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Install dependencies first for better caching
 COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
+RUN yarn install
 
 # Copy the rest of the Next.js app and build
 COPY . .
@@ -17,7 +19,7 @@ RUN yarn build
 # ==========================================
 # Build Stage 2: Go Backend
 # ==========================================
-FROM golang:1.21-alpine AS backend-builder
+FROM golang:1.25-alpine AS backend-builder
 WORKDIR /app/backend
 
 # Install necessary build tools for CGO if needed (sqlite pure go driver shouldn't need it, but good practice)
@@ -33,11 +35,8 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o /app/backend/server main.go
 # ==========================================
 # Final Stage: Production Runner
 # ==========================================
-FROM alpine:latest AS runner
+FROM node:22-alpine AS runner
 WORKDIR /app
-
-# Install Node.js in the final Alpine image to run the standalone Next.js server
-RUN apk add --no-cache nodejs
 
 # --- Copy Go Backend ---
 WORKDIR /app/backend
