@@ -16,6 +16,7 @@ export function ProjectCard({ id, icon, title, desc, tags }: ProjectCardProps) {
                 <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-red-600 to-transparent scale-150 group-hover:scale-100 transition-transform duration-700" />
                 <div className="w-full h-full flex items-center justify-center z-10">
                     {typeof icon === 'string' ? (
+                        /* eslint-disable-next-line @next/next/no-img-element */
                         <img
                             src={icon}
                             alt={`${title} cover`}

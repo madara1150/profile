@@ -17,7 +17,7 @@ export function Navbar() {
     const pathname = usePathname();
     const router = useRouter();
     const [activeTab, setActiveTab] = useState("/");
-    const [user, setUser] = useState<any>(null);
+    const [user, setUser] = useState<{ id: string, username: string, firstName: string, lastName: string, avatar: string, email: string } | null>(null);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     // Initial hydration of user state and event listener
@@ -27,7 +27,7 @@ export function Navbar() {
             if (storedUser) {
                 try {
                     setUser(JSON.parse(storedUser));
-                } catch (e) {
+                } catch {
                     console.error("Failed to parse user from local storage");
                 }
             } else {
@@ -117,9 +117,10 @@ export function Navbar() {
                         >
                             <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold text-sm overflow-hidden border border-primary/20">
                                 {user.avatar ? (
-                                    <img src={user.avatar} alt="Avatar" className="w-full h-full object-cover" />
+                                    {/* eslint-disable-next-line @next/next/no-img-element */ }
+                                    < img src={user.avatar} alt="Avatar" className="w-full h-full object-cover" />
                                 ) : (
-                                    user.firstName ? user.firstName.charAt(0).toUpperCase() : "U"
+                                user.firstName ? user.firstName.charAt(0).toUpperCase() : "U"
                                 )}
                             </div>
                             <ChevronDown className="w-4 h-4 text-muted-foreground hidden sm:block" />

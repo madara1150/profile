@@ -38,9 +38,9 @@ export function UserActionButtons({ id, onDeleteSuccess }: UserActionButtonsProp
                 // Fallback for cases where it's not a stateful list
                 router.refresh();
             }
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error(error);
-            alert("An error occurred while deleting the user: " + error.message);
+            alert("An error occurred while deleting the user: " + (error as Error).message);
             setIsDeleting(false);
         }
     };
