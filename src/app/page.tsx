@@ -80,7 +80,7 @@ export default function Home() {
           {/* === HERO SECTION (Visible at top) === */}
           <motion.section
             className="absolute inset-0 flex flex-col items-center justify-center px-6 lg:px-12"
-            style={{ opacity: heroOpacity, y: heroY, pointerEvents: heroPointerEvents as any }}
+            style={{ opacity: heroOpacity, y: heroY, pointerEvents: heroPointerEvents as unknown as React.CSSProperties["pointerEvents"] }}
           >
             <div className="w-full max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-12 h-full">
               {/* Left Content */}

@@ -40,8 +40,8 @@ export default function AdminUsersPage() {
 
                 const data = await res.json();
                 setUsers(data);
-            } catch (err: any) {
-                setError(err.message);
+            } catch (err: unknown) {
+                setError((err as Error).message);
             } finally {
                 setLoading(false);
             }

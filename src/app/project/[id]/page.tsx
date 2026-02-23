@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import { ArrowLeft, MapPin, Clock, Link as LinkIcon, Download, FileText, LayoutTemplate } from "lucide-react";
 import Link from "next/link";
-import { Suspense } from "react";
 import { AuthGuard } from "@/components/auth-guard";
 
 interface ProjectFile {
@@ -85,6 +84,7 @@ export default async function ProjectDetail({ params }: { params: { id: string }
                             <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-6 scrollbar-thin scrollbar-thumb-red-600 scrollbar-track-zinc-900">
                                 {project.images.map((img, idx) => (
                                     <div key={idx} className="snap-center shrink-0 w-[85vw] md:w-[60vw] lg:w-[45vw] rounded-2xl overflow-hidden border border-zinc-800 bg-zinc-900 shadow-2xl">
+                                        {/* eslint-disable-next-line @next/next/no-img-element */}
                                         <img
                                             src={img}
                                             alt={`${project.title} screenshot ${idx + 1}`}

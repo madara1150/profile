@@ -47,8 +47,8 @@ export default function EditUserPage() {
                     avatar: data.avatar || "",
                 });
                 setOriginalUsername(data.username);
-            } catch (err: any) {
-                setError(err.message);
+            } catch (err: unknown) {
+                setError((err as Error).message);
             } finally {
                 setLoading(false);
             }
@@ -84,8 +84,8 @@ export default function EditUserPage() {
 
             const data = await res.json();
             setFormData(prev => ({ ...prev, avatar: data.url }));
-        } catch (err: any) {
-            setError(err.message || "Failed to upload avatar.");
+        } catch (err: unknown) {
+            setError((err as Error).message || "Failed to upload avatar.");
         } finally {
             setIsUploadingImage(false);
             if (fileInputRef.current) {
@@ -137,7 +137,7 @@ export default function EditUserPage() {
                         window.dispatchEvent(new Event("storage"));
                     }
                 }
-            } catch (e) {
+            } catch {
                 console.error("Failed to sync localStorage for user update");
             }
 
@@ -146,8 +146,8 @@ export default function EditUserPage() {
                 router.push("/admin/users");
                 router.refresh();
             }, 1000);
-        } catch (err: any) {
-            setError(err.message);
+        } catch (err: unknown) {
+            setError((err as Error).message);
         } finally {
             setSaving(false);
         }
@@ -176,6 +176,7 @@ export default function EditUserPage() {
                     <div className="relative group w-20 h-20 bg-primary/20 flex items-center justify-center rounded-full text-primary border border-primary/30 overflow-hidden shrink-0">
                         {formData.avatar ? (
                             <>
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img src={formData.avatar} alt="Avatar" className="w-full h-full object-cover" />
                                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
                                     <button

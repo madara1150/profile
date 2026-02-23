@@ -179,7 +179,7 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
             <div className="border border-border/50 rounded-xl bg-card overflow-hidden shadow-sm">
                 <div className="p-6 border-b border-border/50 bg-muted/20">
                     <h2 className="text-2xl font-bold">Edit Project</h2>
-                    <p className="text-muted-foreground mt-1 text-sm">Update the details for "{form.title}".</p>
+                    <p className="text-muted-foreground mt-1 text-sm">Update the details for &quot;{form.title}&quot;.</p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="p-6 space-y-8">
@@ -285,6 +285,7 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
                                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-3">
                                     {form.images.map((img, index) => (
                                         <div key={index} className="relative group rounded-md overflow-hidden border border-border/50 aspect-video bg-zinc-900">
+                                            {/* eslint-disable-next-line @next/next/no-img-element */}
                                             <img src={img} alt={`Upload ${index + 1}`} className="w-full h-full object-cover" />
                                             <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                                 <button

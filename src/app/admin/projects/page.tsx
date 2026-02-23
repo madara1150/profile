@@ -7,7 +7,7 @@ import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
     PieChart, Pie, Cell, Legend
 } from 'recharts';
-import { format, parseISO, isValid } from 'date-fns';
+import { format } from 'date-fns';
 import { ProjectActionButtons } from "@/components/project-action-buttons";
 
 interface ProjectFile {
@@ -43,9 +43,9 @@ export default function ProjectsDashboardPage() {
                 }
                 const data = await res.json();
                 setProjects(data);
-            } catch (error: any) {
+            } catch (error: unknown) {
                 console.error("Error fetching projects:", error);
-                setError(error.message);
+                setError((error as Error).message);
             } finally {
                 setLoading(false);
             }

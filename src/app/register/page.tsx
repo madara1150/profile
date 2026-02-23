@@ -42,8 +42,8 @@ export default function RegisterPage() {
 
             // Registration successful, redirect to login
             router.push("/login?registered=true");
-        } catch (err: any) {
-            setError(err.message);
+        } catch (err: unknown) {
+            setError((err as Error).message);
         } finally {
             setLoading(false);
         }
