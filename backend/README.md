@@ -1,45 +1,95 @@
-# 🌙 Uchiha Backend - Go & Gin API
+# Uchiha Backend 🚀
 
-This is the backend API for the Uchiha Developer Portfolio, written in Golang using the Gin web framework. It serves the project data and handles uploading mission visuals (images) and confidential documents (files).
+Backend API server สำหรับโปรเจกต์ S-Rank E-Commerce พัฒนาด้วย **Go (Golang)** และ **Gin Framework** 
 
-## Prerequisites
-You **must** install Go to run this backend.
+---
 
-1. Download Go from [https://go.dev/dl/](https://go.dev/dl/) or install it via your package manager (e.g., `choco install golang` on Windows).
-2. Restart your terminal to ensure `go` is in your environment PATH.
+## 🛠️ เทคโนโลยีที่ใช้
+- **Language:** [Go](https://golang.org/)
+- **Framework:** [Gin Web Framework](https://gin-gonic.com/)
+- **CORS:** `github.com/gin-contrib/cors`
 
-## Setup Instructions
+## 🚀 การติดตั้งและรันโปรเจกต์
 
-Once Go is installed, follow these steps:
+1. **ติดตั้ง Dependencies:**
+   เข้าสู่โฟลเดอร์ `backend` และรันคำสั่งเพื่อดาวน์โหลดไลบรารีที่จำเป็น
+   ```bash
+   cd backend
+   go mod tidy
+   ```
 
-### 1. Initialize the Module
-```bash
-# From the backend directory:
-go mod init backend
-```
+2. **รันเซิร์ฟเวอร์:**
+   ```bash
+   go run main.go
+   ```
+   > เซิร์ฟเวอร์จะเปิดใช้งานที่: `http://localhost:8080`
 
-### 2. Download Dependencies
-```bash
-go get -u github.com/gin-gonic/gin
-go get -u github.com/gin-contrib/cors
-```
+---
 
-### 3. Run the Server
-```bash
-go run main.go
-```
+## 📡 API Endpoints
 
-The server will start on port `8080`.
+### 🟢 1. Health Check
+ตรวจสอบสถานะการทำงานของเซิร์ฟเวอร์
+- **Method:** `GET`
+- **Path:** `/`
+- **Response:**
+  ```json
+  {
+    "message": "Uchiha Backend Server is running!",
+    "status": "success"
+  }
+  ```
 
-## Endpoints
+### 🗂️ 2. Projects (ข้อมูลโปรเจกต์)
 
-### Data
-- `GET /api/projects`: Fetches the list of all projects.
-- `GET /api/projects/:id`: Fetches data for a specific project.
+#### ดึงข้อมูลโปรเจกต์ทั้งหมด
+- **Method:** `GET`
+- **Path:** `/api/projects`
+- **Response:** คืนค่ามาเป็น Array ของ JSON ออบเจกต์โปรเจกต์ทั้งหมด
 
-### Uploads
-- `POST /api/upload/image`: Uploads an image. Expected FormData key is `file`. File will be saved to `uploads/images/`.
-- `POST /api/upload/file`: Uploads a document. Expected FormData key is `file`. File will be saved to `uploads/files/`.
+#### ดึงข้อมูลโปรเจกต์ตาม ID
+- **Method:** `GET`
+- **Path:** `/api/projects/:id`
+- **Response:** คืนค่า JSON ออบเจกต์ของโปรเจกต์ที่ระบุ
 
-### Static Files
-- Uploaded files are publicly accessible at `http://localhost:8080/uploads/images/...` and `http://localhost:8080/uploads/files/...`.
+### 📤 3. Uploads (อัปโหลดไฟล์)
+
+#### อัปโหลดรูปภาพ
+ระบบจะบันทึกรูปภาพไว้ที่โฟลเดอร์ `./uploads/images`
+- **Method:** `POST`
+- **Path:** `/api/upload/image`
+- **Body:** `form-data` => `key`: "file", `value`: ไฟล์รูปภาพ
+- **Response:**
+  ```json
+  {
+    "message": "Image uploaded successfully",
+    "name": "filename.png",
+    "url": "http://localhost:8080/uploads/images/filename.png"
+  }
+  ```
+
+#### อัปโหลดไฟล์ทั่วไป (เอกสาร, PDF, ฯลฯ)
+ระบบจะบันทึกรูปภาพไว้ที่โฟลเดอร์ `./uploads/files`
+- **Method:** `POST`
+- **Path:** `/api/upload/file`
+- **Body:** `form-data` => `key`: "file", `value`: ไฟล์เอกสาร
+- **Response:**
+  ```json
+  {
+    "message": "File uploaded successfully",
+    "name": "document.pdf",
+    "url": "http://localhost:8080/uploads/files/document.pdf"
+  }
+  ```
+
+---
+
+## 📁 โครงสร้างไฟล์
+- ระบบจะสร้างโฟลเดอร์สำหรับเก็บไฟล์ที่อัปโหลดโดยอัตโนมัติเมื่อรันเซิร์ฟเวอร์:
+  - `uploads/images/` สำหรับเก็บรูปภาพ
+  - `uploads/files/` สำหรับเก็บไฟล์เอกสารอื่นๆ
+- สามารถเข้าถึงไฟล์ที่อัปโหลดผ่าน URL ได้โดยตรงผ่าน path `/uploads/...` ตัวอย่างเช่น `http://localhost:8080/uploads/images/example.png`
+
+## 🔒 CORS (Cross-Origin Resource Sharing)
+API นี้อนุญาตการเข้าถึงจาก Origin ต่อไปนี้ (ตั้งค่าไว้ใน `main.go`):
+- `http://localhost:3000` (รองรับสำหรับการพัฒนา Next.js Frontend)
