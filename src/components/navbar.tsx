@@ -117,10 +117,12 @@ export function Navbar() {
                         >
                             <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold text-sm overflow-hidden border border-primary/20">
                                 {user.avatar ? (
-                                    {/* eslint-disable-next-line @next/next/no-img-element */ }
-                                    < img src={user.avatar} alt="Avatar" className="w-full h-full object-cover" />
+                                    <>
+                                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                                        <img src={user.avatar} alt="Avatar" className="w-full h-full object-cover" />
+                                    </>
                                 ) : (
-                                user.firstName ? user.firstName.charAt(0).toUpperCase() : "U"
+                                    user.firstName ? user.firstName.charAt(0).toUpperCase() : "U"
                                 )}
                             </div>
                             <ChevronDown className="w-4 h-4 text-muted-foreground hidden sm:block" />

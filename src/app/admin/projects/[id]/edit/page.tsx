@@ -61,8 +61,8 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
                     images: data.images || [],
                     files: data.files || []
                 });
-            } catch (err: any) {
-                setError(err.message || "Failed to load project");
+            } catch (err: unknown) {
+                setError((err as Error).message || "Failed to load project");
             } finally {
                 setIsFetchingInitialData(false);
             }
@@ -110,8 +110,8 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
 
             const data = await res.json();
             setForm(prev => ({ ...prev, images: [...prev.images, data.url] }));
-        } catch (err: any) {
-            setError(err.message || "Failed to upload image.");
+        } catch (err: unknown) {
+            setError((err as Error).message || "Failed to upload image.");
         } finally {
             setIsUploadingImage(false);
             if (fileInputRef.current) {
@@ -153,8 +153,8 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
             // Success, navigate back to admin
             router.push("/admin");
             router.refresh();
-        } catch (err: any) {
-            setError(err.message || "Something went wrong.");
+        } catch (err: unknown) {
+            setError((err as Error).message || "Something went wrong.");
         } finally {
             setIsLoading(false);
         }

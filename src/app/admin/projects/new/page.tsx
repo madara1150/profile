@@ -77,8 +77,8 @@ export default function NewProjectPage() {
 
             const data = await res.json();
             setForm(prev => ({ ...prev, images: [...prev.images, data.url] }));
-        } catch (err: any) {
-            setError(err.message || "Failed to upload image.");
+        } catch (err: unknown) {
+            setError((err as Error).message || "Failed to upload image.");
         } finally {
             setIsUploadingImage(false);
             if (fileInputRef.current) {
@@ -120,8 +120,8 @@ export default function NewProjectPage() {
             // Success, navigate back to admin
             router.push("/admin");
             router.refresh();
-        } catch (err: any) {
-            setError(err.message || "Something went wrong.");
+        } catch (err: unknown) {
+            setError((err as Error).message || "Something went wrong.");
         } finally {
             setIsLoading(false);
         }
