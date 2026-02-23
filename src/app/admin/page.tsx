@@ -2,6 +2,8 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 import { ProjectActionButtons } from "@/components/project-action-buttons";
 
+export const dynamic = "force-dynamic";
+
 interface ProjectFile {
     name: string;
     url: string;

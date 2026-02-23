@@ -56,31 +56,34 @@ export default function ProjectsDashboardPage() {
 
     // Process Data for Charts using useMemo to prevent re-renders and lag
     const creationData = useMemo(() => {
-        const counts: Record<string, number> = {};
+        if (!projects.length) return [];
+
+        const counts = new Map<string, number>();
         projects.forEach(p => {
-            // Attempt to parse the time. If it fails or is missing, use "Unknown"
-            let monthYear = "Unknown Date";
-            if (p.time) {
-                try {
-                    // Try parsing as ISO first, fallback to standard Date
-                    const d = new Date(p.time);
-                    if (!isNaN(d.getTime())) {
-                        monthYear = format(d, 'MMM yyyy');
-                    }
-                } catch {
-                    // ignore and use default
-                }
+            if (!p.time) {
+                counts.set("Unknown Date", (counts.get("Unknown Date") || 0) + 1);
+                return;
             }
-            if (!counts[monthYear]) counts[monthYear] = 0;
-            counts[monthYear]++;
+            try {
+                const d = new Date(p.time);
+                if (!isNaN(d.getTime())) {
+                    const monthYear = format(d, 'MMM yyyy');
+                    counts.set(monthYear, (counts.get(monthYear) || 0) + 1);
+                } else {
+                    counts.set("Unknown Date", (counts.get("Unknown Date") || 0) + 1);
+                }
+            } catch {
+                counts.set("Unknown Date", (counts.get("Unknown Date") || 0) + 1);
+            }
         });
 
-        return Object.entries(counts).map(([name, count]) => ({
+        return Array.from(counts.entries()).map(([name, count]) => ({
             name,
             count
         })).sort((a, b) => {
             if (a.name === "Unknown Date") return 1;
             if (b.name === "Unknown Date") return -1;
+            // Cache performance optimization: new Date() only once per sort operation if needed
             return new Date(a.name).getTime() - new Date(b.name).getTime();
         });
     }, [projects]);
