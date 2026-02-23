@@ -1,14 +1,50 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowDown, Flame } from "lucide-react";
+import { ArrowDown, Flame, Loader2 } from "lucide-react";
 import { Sharingan } from "@/components/ui/sharingan";
-import { projectsData } from "@/data/projects";
 import { ProjectCard } from "@/components/project-card";
+
+interface ProjectFile {
+  name: string;
+  url: string;
+}
+
+interface Project {
+  id: string;
+  title: string;
+  desc: string;
+  location: string;
+  time: string;
+  referenceUrl: string;
+  tags: string[];
+  images: string[];
+  files: ProjectFile[];
+}
 
 export default function Home() {
   const introRef = useRef<HTMLDivElement>(null);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const res = await fetch("http://localhost:8080/api/projects");
+        if (res.ok) {
+          const data = await res.json();
+          setProjects(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch projects:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
 
   // Track scroll progress within the intro container
   const { scrollYProgress: introProgress } = useScroll({
@@ -111,18 +147,29 @@ export default function Home() {
             <p className="text-xl text-gray-400 max-w-2xl font-medium">Bounties completed and systems architected from the shadows.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {projectsData.map((project) => (
-              <ProjectCard
-                key={project.id}
-                id={project.id}
-                icon={project.icon}
-                title={project.title}
-                desc={project.desc}
-                tags={project.tags}
-              />
-            ))}
-          </div>
+          {isLoading ? (
+            <div className="flex flex-col items-center justify-center py-20 text-red-500">
+              <Loader2 className="w-12 h-12 animate-spin mb-4" />
+              <p className="text-xl font-bold animate-pulse">Accessing Secret Archives...</p>
+            </div>
+          ) : projects.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {projects.map((project) => (
+                <ProjectCard
+                  key={project.id}
+                  id={project.id}
+                  icon={project.images && project.images.length > 0 ? project.images[0] : "/icons/default.svg"}
+                  title={project.title}
+                  desc={project.desc}
+                  tags={project.tags || []}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-20 text-gray-500">
+              <p className="text-xl">No mission logs found. The database is empty.</p>
+            </div>
+          )}
         </div>
       </section>
     </motion.main>

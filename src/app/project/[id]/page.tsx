@@ -1,17 +1,40 @@
-"use client";
-
-import { useMemo } from "react";
-import { useParams, notFound } from "next/navigation";
-import { motion } from "framer-motion";
-import { ArrowLeft, MapPin, Clock, Link as LinkIcon, Download, FileText } from "lucide-react";
+import { notFound } from "next/navigation";
+import { ArrowLeft, MapPin, Clock, Link as LinkIcon, Download, FileText, LayoutTemplate } from "lucide-react";
 import Link from "next/link";
-import { projectsData } from "@/data/projects";
+import { Suspense } from "react";
 
-export default function ProjectDetail() {
-    const params = useParams();
-    const id = params.id as string;
+interface ProjectFile {
+    name: string;
+    url: string;
+}
 
-    const project = useMemo(() => projectsData.find((p) => p.id === id), [id]);
+interface Project {
+    id: string;
+    title: string;
+    desc: string;
+    location: string;
+    time: string;
+    referenceUrl: string;
+    tags: string[];
+    images: string[];
+    files: ProjectFile[];
+}
+
+async function getProject(id: string): Promise<Project | null> {
+    try {
+        const res = await fetch(`http://localhost:8080/api/projects/${id}`, { cache: "no-store" });
+        if (!res.ok) return null;
+        return res.json();
+    } catch (error) {
+        console.error("Failed to fetch project details:", error);
+        return null;
+    }
+}
+
+export default async function ProjectDetail({ params }: { params: { id: string } }) {
+    // Next.js 15: params should be awaited before using its properties
+    const { id } = await params;
+    const project = await getProject(id);
 
     if (!project) {
         return notFound();
@@ -19,10 +42,10 @@ export default function ProjectDetail() {
 
     return (
         <main className="min-h-screen bg-black text-white selection:bg-red-600 selection:text-white pt-24 pb-32 px-6 lg:px-24">
-            <div className="max-w-7xl mx-auto w-full">
+            <div className="max-w-7xl mx-auto w-full animate-in fade-in duration-700">
                 {/* Back Button */}
                 <Link
-                    href="/"
+                    href="/#projects"
                     className="inline-flex items-center text-gray-400 hover:text-white transition-colors mb-12 group"
                 >
                     <ArrowLeft className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" />
@@ -32,15 +55,16 @@ export default function ProjectDetail() {
                 {/* Header Section */}
                 <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-12">
                     <div className="flex items-center gap-6">
-                        <div className="w-20 h-20 rounded-2xl bg-zinc-900 border border-red-900/50 flex items-center justify-center text-red-500">
-                            {project.icon}
+                        <div className="w-20 h-20 rounded-2xl bg-zinc-900 border border-red-900/50 flex items-center justify-center text-red-500 shrink-0">
+                            {/* Generic fallback icon since the DB doesn't store SVG icons natively */}
+                            <LayoutTemplate className="w-10 h-10" />
                         </div>
                         <div>
                             <h1 className="text-4xl md:text-6xl font-black tracking-tighter uppercase text-white drop-shadow-[0_0_10px_rgba(220,38,38,0.3)] mb-2">
                                 {project.title}
                             </h1>
                             <div className="flex flex-wrap gap-2">
-                                {project.tags.map((tag) => (
+                                {project.tags && project.tags.map((tag) => (
                                     <span key={tag} className="px-3 py-1 border border-red-900/50 bg-red-950/30 text-red-400 text-sm font-bold rounded uppercase tracking-wider">
                                         {tag}
                                     </span>
@@ -59,7 +83,6 @@ export default function ProjectDetail() {
                         <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-6 scrollbar-thin scrollbar-thumb-red-600 scrollbar-track-zinc-900">
                             {project.images.map((img, idx) => (
                                 <div key={idx} className="snap-center shrink-0 w-[85vw] md:w-[60vw] lg:w-[45vw] rounded-2xl overflow-hidden border border-zinc-800 bg-zinc-900 shadow-2xl">
-                                    {/* Using standard img tag with aspect ratio for simplicity, you could use next/image here */}
                                     <img
                                         src={img}
                                         alt={`${project.title} screenshot ${idx + 1}`}
@@ -82,7 +105,7 @@ export default function ProjectDetail() {
                             <h2 className="text-2xl font-bold uppercase tracking-wider text-gray-300 mb-6 border-l-4 border-red-600 pl-4">
                                 Mission Overview
                             </h2>
-                            <p className="text-gray-400 text-lg leading-relaxed">
+                            <p className="text-gray-400 text-lg leading-relaxed whitespace-pre-wrap">
                                 {project.desc}
                             </p>
                         </section>

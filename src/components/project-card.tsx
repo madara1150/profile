@@ -14,8 +14,18 @@ export function ProjectCard({ id, icon, title, desc, tags }: ProjectCardProps) {
         <Link href={`/project/${id}`} className="group rounded-xl bg-zinc-900/80 border border-red-900/30 hover:border-red-600/80 overflow-hidden transition-all hover:shadow-[0_0_30px_rgba(220,38,38,0.15)] flex flex-col cursor-pointer block">
             <div className="h-48 bg-black flex items-center justify-center group-hover:bg-red-950/30 transition-colors relative overflow-hidden">
                 <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-red-600 to-transparent scale-150 group-hover:scale-100 transition-transform duration-700" />
-                <div className="[&>svg]:w-16 [&>svg]:h-16 [&>svg]:text-red-500 opacity-50 group-hover:opacity-100 group-hover:scale-110 transition-all z-10">
-                    {icon}
+                <div className="w-full h-full flex items-center justify-center z-10">
+                    {typeof icon === 'string' ? (
+                        <img
+                            src={icon}
+                            alt={`${title} cover`}
+                            className="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
+                        />
+                    ) : (
+                        <div className="[&>svg]:w-16 [&>svg]:h-16 [&>svg]:text-red-500 opacity-50 group-hover:opacity-100 group-hover:scale-110 transition-all">
+                            {icon}
+                        </div>
+                    )}
                 </div>
             </div>
             <div className="p-8 flex-1 flex flex-col relative z-10 bg-zinc-900/50 backdrop-blur-md">

@@ -7,6 +7,7 @@ Backend API server สำหรับโปรเจกต์ S-Rank E-Commerce 
 ## 🛠️ เทคโนโลยีที่ใช้
 - **Language:** [Go](https://golang.org/)
 - **Framework:** [Gin Web Framework](https://gin-gonic.com/)
+- **Database:** SQLite (via `github.com/glebarez/sqlite` Pure Go / No CGO required) + GORM
 - **CORS:** `github.com/gin-contrib/cors`
 
 ## 🚀 การติดตั้งและรันโปรเจกต์
@@ -93,3 +94,24 @@ Backend API server สำหรับโปรเจกต์ S-Rank E-Commerce 
 ## 🔒 CORS (Cross-Origin Resource Sharing)
 API นี้อนุญาตการเข้าถึงจาก Origin ต่อไปนี้ (ตั้งค่าไว้ใน `main.go`):
 - `http://localhost:3000` (รองรับสำหรับการพัฒนา Next.js Frontend)
+
+---
+
+## 🐳 การใช้งานผ่าน Docker (Production)
+
+โปรเจกต์นี้มาพร้อมกับไฟล์ `Dockerfile` แบบ Multi-stage ที่รวมเอาทั้ง **Go Backend** และ **Next.js Frontend** เข้าไว้ด้วยกันใน Container เดียว เพื่อความง่ายในการ Deploy จริง
+
+### วิธีสร้าง Docker Image (Build)
+ให้รันคำสั่งต่อไปนี้ที่โฟลเดอร์หลักสุดของโปรเจกต์ (โฟลเดอร์นอกสุดที่คลุมทั้ง `src` และ `backend`)
+
+```bash
+docker build -t uchiha-app .
+```
+
+### วิธีรัน Docker Container (Run)
+เปิดใช้งานทั้ง 2 เซิร์ฟเวอร์พร้อมกันผ่านพอร์ต `3000` (หน้าเว็บ) และ `8080` (API) ได้เลย:
+
+```bash
+docker run -p 3000:3000 -p 8080:8080 -v $(pwd)/project.db:/app/backend/project.db --name uchiha-instance uchiha-app
+```
+> **หมายเหตุ:** แนะนำให้ mount volume ไฟล์รูปภาพและไฟล์ Database เช่น `project.db` ออกมาด้านนอก เพื่อไม่ให้ข้อมูลหายตอนลบ Container ครับ

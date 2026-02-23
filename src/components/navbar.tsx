@@ -4,12 +4,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Home, Briefcase, User, LogIn } from "lucide-react";
+import { Home, Briefcase, User, LogIn, Settings } from "lucide-react";
 
 const navItems = [
     { name: "Home", href: "/", icon: Home },
     { name: "Projects", href: "/#projects", icon: Briefcase },
     { name: "About", href: "/#about", icon: User },
+    { name: "Admin", href: "/admin", icon: Settings },
 ];
 
 export function Navbar() {
