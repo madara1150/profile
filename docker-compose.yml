@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nextjs-project-app
+    ports:
+      - "3000:3000"
+      - "8080:8080"
+    volumes:
+      # Mount the SQLite database file to persist data across container restarts
+      - ./backend/project.db:/app/backend/project.db
+      # Mount uploaded files/images if they exist locally
+      - ./backend/uploads:/app/backend/uploads
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+      - DATABASE_URL=file:../backend/project.db
+    restart: unless-stopped

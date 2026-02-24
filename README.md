@@ -79,28 +79,25 @@ pnpm dev
 ### 4. Enter the Illusion
 Open [http://localhost:3000](http://localhost:3000) in your browser to witness the portfolio.
 
-### 5. Running with Docker (Optional)
-If you want to run the full stack (Next.js + Go Backend) via Docker locally, build the image first:
+### 5. Running with Docker Compose (Recommended)
+You can easily spin up the full stack (Next.js Frontend, Go API Backend, and the connected SQLite database) using Docker Compose.
+
 ```bash
-docker build -t uchiha-app:latest .
+docker-compose up -d --build
 ```
 
-Then run the container. **Note on Volume Mounting**: Since the project uses SQLite, you need to mount the database file. The path syntax depends on your terminal:
+**Services included:**
+- **Frontend**: Next.js App available on `http://localhost:3000`
+- **Backend API**: Go Server available on `http://localhost:8080`
+- **Database**: SQLite Database automatically mounted via Volume to `backend/project.db` ensuring data persistence.
 
-**On Windows PowerShell:**
-```powershell
-docker run -p 3000:3000 -p 8080:8080 -v "${PWD}/backend/project.db:/app/backend/project.db" --name uchiha-instance uchiha-app:latest
-```
+### 6. Database Management (Prisma Studio)
+This project uses **Prisma** as the ORM to interact with the SQLite backend database. To view, edit, or manage the data via a beautiful web UI, run:
 
-**On Windows Command Prompt (CMD):**
-```cmd
-docker run -p 3000:3000 -p 8080:8080 -v "%cd%/backend/project.db:/app/backend/project.db" --name uchiha-instance uchiha-app:latest
-```
-
-**On Linux/Mac (Bash):**
 ```bash
-docker run -p 3000:3000 -p 8080:8080 -v "$(pwd)/backend/project.db:/app/backend/project.db" --name uchiha-instance uchiha-app:latest
+npx prisma studio
 ```
+Then open `http://localhost:5555`
 
 ---
 
@@ -108,8 +105,12 @@ docker run -p 3000:3000 -p 8080:8080 -v "$(pwd)/backend/project.db:/app/backend/
 
 ```text
 📦 frontend
+ ┣ 📂 docker-compose.yml      # Orchestrates Frontend + Backend
+ ┣ 📂 backend                 # Hidden Go Backend & SQLite DB
+ ┣ 📂 prisma                  # Prisma ORM Schema & Client setup
  ┣ 📂 src
  ┃ ┣ 📂 app
+ ┃ ┃ ┣ 📂 api/graphql         # New GraphQL Yoga Endpoint
  ┃ ┃ ┣ 📂 project
  ┃ ┃ ┃ ┗ 📂 [id]              # Dynamic route for project details
  ┃ ┃ ┃   ┗ 📜 page.tsx        # Carousel, Metadata, Downloads
@@ -121,9 +122,7 @@ docker run -p 3000:3000 -p 8080:8080 -v "$(pwd)/backend/project.db:/app/backend/
  ┃ ┃ ┣ 📜 navbar.tsx          # Floating dynamic navigation
  ┃ ┃ ┣ 📜 project-card.tsx    # Interactive project list item
  ┃ ┃ ┗ ...
- ┃ ┣ 📂 data
- ┃ ┃ ┗ 📜 projects.tsx        # Centralized project database (JSON-like)
- ┃ ┗ ...
+ ┃ ┗ 📂 graphql               # Custom GraphQL Schema & Resolvers
  ┗ 📜 package.json
 ```
 
