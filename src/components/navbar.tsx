@@ -136,6 +136,13 @@ export function Navbar() {
                                     <p className="text-xs text-muted-foreground truncate">@{user.username}</p>
                                 </div>
                                 <Link
+                                    href="/profile"
+                                    onClick={() => setIsDropdownOpen(false)}
+                                    className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-secondary/50 transition-colors"
+                                >
+                                    <User className="w-4 h-4" /> My Profile
+                                </Link>
+                                <Link
                                     href="/admin"
                                     onClick={() => setIsDropdownOpen(false)}
                                     className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-secondary/50 transition-colors"

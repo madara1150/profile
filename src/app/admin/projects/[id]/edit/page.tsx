@@ -2,8 +2,9 @@
 
 import { useState, useRef, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Loader2, Save, X, ImagePlus } from "lucide-react";
+import { ArrowLeft, Loader2, Save, X, ImagePlus, MapPin } from "lucide-react";
 import Link from "next/link";
+import { LocationModal } from "@/components/location-modal";
 
 interface ProjectFile {
     name: string;
@@ -31,6 +32,7 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
     const [isLoading, setIsLoading] = useState(false);
     const [isFetchingInitialData, setIsFetchingInitialData] = useState(true);
     const [isUploadingImage, setIsUploadingImage] = useState(false);
+    const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [currentTag, setCurrentTag] = useState("");
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -182,6 +184,12 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
                     <p className="text-muted-foreground mt-1 text-sm">Update the details for &quot;{form.title}&quot;.</p>
                 </div>
 
+                <LocationModal
+                    isOpen={isLocationModalOpen}
+                    onClose={() => setIsLocationModalOpen(false)}
+                    onConfirm={(loc) => setForm(prev => ({ ...prev, location: loc }))}
+                />
+
                 <form onSubmit={handleSubmit} className="p-6 space-y-8">
                     {error && (
                         <div className="p-4 rounded-md bg-destructive/10 text-destructive border border-destructive/20 text-sm">
@@ -205,14 +213,24 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
 
                         <div className="space-y-2">
                             <label htmlFor="location" className="text-sm font-medium">Location</label>
-                            <input
-                                id="location"
-                                name="location"
-                                value={form.location}
-                                onChange={handleChange}
-                                className="w-full flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                placeholder="e.g. Konohagakure"
-                            />
+                            <div className="flex gap-2">
+                                <input
+                                    id="location"
+                                    name="location"
+                                    value={form.location}
+                                    onChange={handleChange}
+                                    className="w-full flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                    placeholder="e.g. Konohagakure"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setIsLocationModalOpen(true)}
+                                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground transition-colors"
+                                    title="Choose on map"
+                                >
+                                    <MapPin className="w-4 h-4" />
+                                </button>
+                            </div>
                         </div>
 
                         <div className="space-y-2 md:col-span-2">
