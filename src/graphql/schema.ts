@@ -53,7 +53,7 @@ const resolvers = {
         projects: async () => {
             return await prisma.project.findMany();
         },
-        projectById: async (_: any, { id }: { id: string }) => {
+        projectById: async (_: unknown, { id }: { id: string }) => {
             return await prisma.project.findUnique({
                 where: { id },
             });
@@ -61,14 +61,14 @@ const resolvers = {
         users: async () => {
             return await prisma.user.findMany();
         },
-        userById: async (_: any, { id }: { id: string }) => {
+        userById: async (_: unknown, { id }: { id: string }) => {
             return await prisma.user.findUnique({
                 where: { id },
             });
         },
     },
     Mutation: {
-        createProject: async (_: any, args: any) => {
+        createProject: async (_: unknown, args: Record<string, unknown>) => {
             return await prisma.project.create({
                 data: {
                     id: args.id,
@@ -83,7 +83,7 @@ const resolvers = {
                 },
             });
         },
-        deleteProject: async (_: any, { id }: { id: string }) => {
+        deleteProject: async (_: unknown, { id }: { id: string }) => {
             return await prisma.project.delete({
                 where: { id },
             });
