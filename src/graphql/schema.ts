@@ -68,7 +68,17 @@ const resolvers = {
         },
     },
     Mutation: {
-        createProject: async (_: unknown, args: Record<string, unknown>) => {
+        createProject: async (_: unknown, args: {
+            id: string;
+            title: string;
+            desc?: string;
+            tags?: string;
+            images?: string;
+            location?: string;
+            time?: string;
+            reference_url?: string;
+            files?: string;
+        }) => {
             return await prisma.project.create({
                 data: {
                     id: args.id,
