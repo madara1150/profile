@@ -99,6 +99,21 @@ npx prisma studio
 ```
 Then open `http://localhost:5555`
 
+### 7. Component Workshop (Storybook)
+We use Storybook to develop, document, and test UI components in isolation (Dark Mode & Tailwind enabled).
+
+**Run locally:**
+```bash
+npm run storybook
+```
+Open `http://localhost:6006`
+
+**Run via Docker Compose:**
+```bash
+docker-compose up storybook -d
+```
+Open `http://localhost:6006`
+
 ---
 
 ## 📁 Repository Structure

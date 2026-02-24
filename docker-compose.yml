@@ -20,3 +20,19 @@ services:
       - HOSTNAME=0.0.0.0
       - DATABASE_URL=file:../backend/project.db
     restart: unless-stopped
+
+  storybook:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: frontend-builder
+    container_name: nextjs-storybook
+    ports:
+      - "6006:6006"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: npm run storybook
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    restart: unless-stopped
