@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { useState } from 'react';
 import { GenjutsuTransition } from './genjutsu';
 
@@ -39,4 +39,8 @@ const GenjutsuDemo = () => {
 
 export const Interactive: Story = {
     render: () => <GenjutsuDemo />,
+    args: {
+        isActive: false,
+        onComplete: () => { },
+    }
 };

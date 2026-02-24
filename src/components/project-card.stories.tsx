@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { ProjectCard } from './project-card';
 import { Layout } from 'lucide-react';
 
@@ -19,7 +19,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 // Wrapper for max-width to simulate grid container
-const CardDemo = (args: any) => (
+const CardDemo = (args: React.ComponentProps<typeof ProjectCard>) => (
     <div className="w-[400px]">
         <ProjectCard {...args} />
     </div>
